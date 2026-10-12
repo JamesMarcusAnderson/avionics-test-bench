@@ -1,0 +1,32 @@
+name: ci
+on: [push, pull_request]
+jobs:
+  host:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with: { python-version: '3.11' }
+      - run: pip install -r host/requirements.txt pytest
+      - run: python -m py_compile host/validate.py
+      - run: python -m pytest host/test_validate.py -q
+      - run: python -c "import json; json.load(open('docs/output.json'))"
+  firmware:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install ARM toolchain
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y cmake ninja-build gcc-arm-none-eabi \
+            libnewlib-arm-none-eabi libstdc++-arm-none-eabi-newlib
+      - name: Fetch pico-sdk
+        run: git clone --depth 1 --recurse-submodules --shallow-submodules \
+          https://github.com/raspberrypi/pico-sdk.git "$RUNNER_TEMP/pico-sdk"
+      - name: Build firmware
+        env:
+          PICO_SDK_PATH: ${{ runner.temp }}/pico-sdk
+        run: |
+          cmake -G Ninja -S firmware -B build -DPICO_BOARD=pico -DCMAKE_BUILD_TYPE=Release
+          cmake --build build
+          test -s build/bench_validator.uf2
