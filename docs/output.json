@@ -1,0 +1,12 @@
+{
+  "started": true,
+  "completed": true,
+  "tests": [
+    {"test": "gpio_loopback", "result": "PASS", "timestamp": "2026-10-12T14:01:03"},
+    {"test": "i2c_scan", "result": "PASS", "value": "0", "timestamp": "2026-10-12T14:01:03"},
+    {"test": "spi_loopback", "result": "PASS", "timestamp": "2026-10-12T14:01:03"},
+    {"test": "adc_read", "result": "PASS", "value": "512", "timestamp": "2026-10-12T14:01:04"},
+    {"test": "uart_init", "result": "PASS", "timestamp": "2026-10-12T14:01:04"}
+  ],
+  "summary": {"total": 5, "passed": 5, "failed": 0}
+}
