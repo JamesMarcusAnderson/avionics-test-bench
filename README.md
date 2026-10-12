@@ -5,6 +5,23 @@ Host script writes a JSON report and exits nonzero if the bench did not pass.
 ## Covers
 Hardware Test Engineer · Board-Level Test Engineer · Test Technician · QA Engineer · Hardware Validation Engineer (entry-level)
 
+## Output
+See `docs/output.json`:
+```json
+{"total": 5, "passed": 5, "failed": 0}
+```
+
+## Quickstart
+```bash
+# copy build/bench_validator.uf2 onto the Pico (BOOTSEL drag-and-drop)
+pip install -r host/requirements.txt
+python host/validate.py --port /dev/ttyACM0
+```
+
+`validate.py` exits 0 only if the run completed, every test passed, and at
+least `--min-tests` (default 5) tests reported. A dead port still produces a
+report with `port_error` set rather than a traceback.
+
 ## Wiring
 Two jumpers are required, or the tests fail on purpose:
 
@@ -23,23 +40,6 @@ voltage is asserted.
 export PICO_SDK_PATH=/path/to/pico-sdk
 cmake -G Ninja -S firmware -B build -DPICO_BOARD=pico -DCMAKE_BUILD_TYPE=Release
 cmake --build build          # -> build/bench_validator.uf2
-```
-
-## Quickstart
-```bash
-# copy build/bench_validator.uf2 onto the Pico (BOOTSEL drag-and-drop)
-pip install -r host/requirements.txt
-python host/validate.py --port /dev/ttyACM0
-```
-
-`validate.py` exits 0 only if the run completed, every test passed, and at
-least `--min-tests` (default 5) tests reported. A dead port still produces a
-report with `port_error` set rather than a traceback.
-
-## Output
-See `docs/output.json`:
-```json
-{"total": 5, "passed": 5, "failed": 0}
 ```
 
 ## Tests
